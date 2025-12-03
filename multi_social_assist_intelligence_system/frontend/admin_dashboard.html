@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: #f4f4f4;
+    padding: 40px;
+}
+h1 { text-align: center; }
+button {
+    padding: 10px 20px;
+    background: red;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+</style>
+
+</head>
+<body>
+
+<h1>Admin Dashboard</h1>
+<p>Welcome, Admin!</p>
+
+<button onclick="logout()">Logout</button>
+
+<script>
+if(localStorage.getItem("role") !== "admin"){
+    window.location.href = "login.html";
+}
+
+function logout(){
+    localStorage.clear();
+    window.location.href = "login.html";
+}
+</script>
+
+</body>
+</html>

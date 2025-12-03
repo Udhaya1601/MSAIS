@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Dashboard</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: #f0f0f0;
+    padding: 40px;
+}
+h1 { text-align: center; }
+button {
+    padding: 10px 20px;
+    background: red;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+</style>
+
+</head>
+<body>
+
+<h1>User Dashboard</h1>
+<p>Welcome, User!</p>
+
+<button onclick="logout()">Logout</button>
+
+<script>
+if(!localStorage.getItem("token")){
+    window.location.href = "login.html";
+}
+
+function logout(){
+    localStorage.clear();
+    window.location.href = "login.html";
+}
+</script>
+
+</body>
+</html>
