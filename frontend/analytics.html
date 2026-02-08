@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Analytics Dashboard | MSAIS</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial;
+    background:#0b1220;
+    color:white;
+}
+
+.navbar{
+    padding:15px;
+    background:#0f172a;
+    text-align:center;
+    font-size:20px;
+    font-weight:bold;
+}
+
+.container{
+    max-width:1100px;
+    margin:30px auto;
+    background:#111827;
+    padding:20px;
+    border-radius:12px;
+}
+
+.grid-4{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap:15px;
+}
+
+.card{
+    background:#020617;
+    padding:15px;
+    border-radius:10px;
+}
+
+.card h3{
+    margin:0;
+    color:#60a5fa;
+}
+
+.big{
+    font-size:28px;
+    margin-top:8px;
+}
+
+.grid-2{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:15px;
+    margin-top:20px;
+}
+
+.panel{
+    background:#020617;
+    padding:15px;
+    border-radius:10px;
+}
+
+.bar{
+    height:8px;
+    background:#2563eb;
+    border-radius:4px;
+}
+
+.bar-row{
+    margin:10px 0;
+}
+
+.bar-label{
+    display:flex;
+    justify-content:space-between;
+    font-size:13px;
+}
+
+.live{
+    color:#10b981;
+    font-size:14px;
+}
+
+.btn{
+    margin-top:20px;
+    padding:10px;
+    width:100%;
+    background:#7c3aed;
+    color:white;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.status{
+    margin-top:15px;
+    padding:10px;
+    background:#020617;
+    border-radius:8px;
+    text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<div class="navbar">Security Analytics Dashboard</div>
+
+<div class="container">
+
+<h2>City Safety Overview <span class="live">● LIVE</span></h2>
+
+<div class="grid-4">
+
+<div class="card">
+<h3>Active Incidents</h3>
+<div class="big" id="incidents">24</div>
+</div>
+
+<div class="card">
+<h3>Missing Reports</h3>
+<div class="big" id="missing">7</div>
+</div>
+
+<div class="card">
+<h3>Volunteers Online</h3>
+<div class="big" id="volunteers">112</div>
+</div>
+
+<div class="card">
+<h3>Emergency Alerts</h3>
+<div class="big" id="alerts">5</div>
+</div>
+
+</div>
+
+<div class="grid-2">
+
+<div class="panel">
+<h3>Incident Trends (Last 24 hrs)</h3>
+
+<div class="bar-row">
+<div class="bar-label">
+<span>Morning</span><span>35%</span>
+</div>
+<div class="bar" style="width:35%"></div>
+</div>
+
+<div class="bar-row">
+<div class="bar-label">
+<span>Afternoon</span><span>60%</span>
+</div>
+<div class="bar" style="width:60%"></div>
+</div>
+
+<div class="bar-row">
+<div class="bar-label">
+<span>Night</span><span>75%</span>
+</div>
+<div class="bar" style="width:75%"></div>
+</div>
+</div>
+
+<div class="panel">
+<h3>Response Efficiency</h3>
+
+<div class="bar-row">
+<div class="bar-label">
+<span>Police</span><span>82%</span>
+</div>
+<div class="bar" style="width:82%"></div>
+</div>
+
+<div class="bar-row">
+<div class="bar-label">
+<span>Ambulance</span><span>74%</span>
+</div>
+<div class="bar" style="width:74%"></div>
+</div>
+
+<div class="bar-row">
+<div class="bar-label">
+<span>Volunteers</span><span>68%</span>
+</div>
+<div class="bar" style="width:68%"></div>
+</div>
+</div>
+
+</div>
+
+<div id="status" class="status">
+Data auto-refresh every 10 seconds (simulated).
+</div>
+
+<button class="btn" onclick="backHome()">Back to Dashboard</button>
+
+</div>
+
+<script>
+function refreshData(){
+    document.getElementById("incidents").innerText =
+        20 + Math.floor(Math.random()*10);
+
+    document.getElementById("missing").innerText =
+        5 + Math.floor(Math.random()*5);
+
+    document.getElementById("volunteers").innerText =
+        100 + Math.floor(Math.random()*30);
+
+    document.getElementById("alerts").innerText =
+        3 + Math.floor(Math.random()*4);
+}
+
+setInterval(refreshData, 10000);
+
+function backHome(){
+    window.location.href = "dashboard.html";
+}
+</script>
+
+</body>
+</html>

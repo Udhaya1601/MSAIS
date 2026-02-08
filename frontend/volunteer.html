@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Volunteer Network | MSAIS</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial;
+    background:#0b1220;
+    color:white;
+}
+
+.navbar{
+    padding:15px;
+    background:#0f172a;
+    text-align:center;
+    font-size:20px;
+    font-weight:bold;
+}
+
+.container{
+    max-width:1100px;
+    margin:30px auto;
+    background:#111827;
+    padding:20px;
+    border-radius:12px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:20px;
+}
+
+.panel{
+    background:#020617;
+    padding:15px;
+    border-radius:10px;
+}
+
+h2{
+    margin-top:0;
+}
+
+label{
+    display:block;
+    margin-top:12px;
+}
+
+input, textarea, select{
+    width:100%;
+    padding:8px;
+    border-radius:6px;
+    border:none;
+    margin-top:5px;
+}
+
+.btn{
+    margin-top:12px;
+    padding:10px;
+    width:100%;
+    background:#2563eb;
+    color:white;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.btn:hover{
+    background:#1d4ed8;
+}
+
+.secondary{
+    background:#10b981;
+}
+
+.secondary:hover{
+    background:#0f766e;
+}
+
+.back{
+    margin-top:15px;
+    background:#7c3aed;
+}
+
+.list{
+    margin-top:15px;
+}
+
+.card{
+    background:#111827;
+    padding:10px;
+    border-radius:8px;
+    margin-bottom:10px;
+}
+
+.status{
+    margin-top:10px;
+    padding:8px;
+    background:#0b1220;
+    border-radius:6px;
+    text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<div class="navbar">Volunteer Network</div>
+
+<div class="container">
+
+<h2>Community Volunteer Network</h2>
+
+<div class="grid">
+
+<!-- LEFT PANEL -->
+<div class="panel">
+<h3>Become a Volunteer</h3>
+
+<label>Name *</label>
+<input type="text" id="vname" placeholder="Your full name">
+
+<label>Phone *</label>
+<input type="tel" id="vphone" placeholder="Contact number">
+
+<label>Skills *</label>
+<select id="vskill">
+<option value="">Select your skill</option>
+<option>First Aid</option>
+<option>Rescue</option>
+<option>Food Distribution</option>
+<option>Transport</option>
+<option>Technical Support</option>
+<option>General Help</option>
+</select>
+
+<label>Available Hours *</label>
+<input type="text" id="vhours" placeholder="e.g., 4 hours / weekend">
+
+<button class="btn secondary" onclick="registerVolunteer()">
+Register as Volunteer
+</button>
+
+<div id="vstatus" class="status">
+Fill details to join the network.
+</div>
+</div>
+
+<!-- RIGHT PANEL -->
+<div class="panel">
+<h3>Request Volunteer Help</h3>
+
+<label>Your Name *</label>
+<input type="text" id="rname" placeholder="Your name">
+
+<label>Location *</label>
+<input type="text" id="rlocation" placeholder="Exact location">
+
+<label>Type of Help *</label>
+<select id="rtype">
+<option value="">Select help type</option>
+<option>Medical</option>
+<option>Rescue</option>
+<option>Food</option>
+<option>Transport</option>
+<option>Technical</option>
+<option>Other</option>
+</select>
+
+<label>Details *</label>
+<textarea id="rdetails" rows="4"
+placeholder="Explain your situation clearly"></textarea>
+
+<button class="btn" onclick="requestHelp()">
+Request Volunteers
+</button>
+
+<h4>Active Help Requests</h4>
+<div id="requestList" class="list">
+<div class="card">No requests yet.</div>
+</div>
+
+<div id="rstatus" class="status">
+Submit a request to get help.
+</div>
+</div>
+
+</div>
+
+<button class="btn back" onclick="backHome()">Back to Dashboard</button>
+
+</div>
+
+<script>
+function registerVolunteer(){
+    const name = document.getElementById("vname").value.trim();
+    const phone = document.getElementById("vphone").value.trim();
+    const skill = document.getElementById("vskill").value;
+    const hours = document.getElementById("vhours").value.trim();
+
+    if(!name || !phone || !skill || !hours){
+        document.getElementById("vstatus").innerText =
+        "⚠️ Please fill all required fields.";
+        return;
+    }
+
+    document.getElementById("vstatus").innerText =
+    "✅ You are now registered as a volunteer! We'll notify you of nearby needs.";
+}
+
+function requestHelp(){
+    const name = document.getElementById("rname").value.trim();
+    const location = document.getElementById("rlocation").value.trim();
+    const type = document.getElementById("rtype").value;
+    const details = document.getElementById("rdetails").value.trim();
+
+    if(!name || !location || !type || !details){
+        document.getElementById("rstatus").innerText =
+        "⚠️ Please complete all fields.";
+        return;
+    }
+
+    const list = document.getElementById("requestList");
+
+    const card = document.createElement("div");
+    card.className = "card";
+
+    card.innerHTML = `
+    <strong>${type} Help Needed</strong><br>
+    📍 ${location}<br>
+    👤 Requested by: ${name}<br>
+    📝 ${details}
+    `;
+
+    list.appendChild(card);
+
+    document.getElementById("rstatus").innerText =
+    "📢 Help request posted. Volunteers will be alerted.";
+}
+
+function backHome(){
+    window.location.href = "dashboard.html";
+}
+</script>
+
+</body>
+</html>

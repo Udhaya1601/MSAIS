@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Anonymous Tips | MSAIS</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial;
+    background:#0b1220;
+    color:white;
+}
+
+.navbar{
+    padding:15px;
+    background:#0f172a;
+    text-align:center;
+    font-size:20px;
+    font-weight:bold;
+}
+
+.container{
+    max-width:900px;
+    margin:30px auto;
+    background:#111827;
+    padding:20px;
+    border-radius:12px;
+}
+
+.notice{
+    background:#020617;
+    padding:12px;
+    border-left:4px solid #facc15;
+    border-radius:6px;
+    margin-bottom:15px;
+}
+
+label{
+    display:block;
+    margin-top:12px;
+}
+
+textarea, input, select{
+    width:100%;
+    padding:8px;
+    border-radius:6px;
+    border:none;
+    margin-top:5px;
+}
+
+textarea{
+    resize:vertical;
+}
+
+.btn{
+    margin-top:15px;
+    padding:10px;
+    width:100%;
+    background:#2563eb;
+    color:white;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    font-size:15px;
+}
+
+.btn:hover{
+    background:#1d4ed8;
+}
+
+.secondary{
+    background:#10b981;
+}
+
+.secondary:hover{
+    background:#0f766e;
+}
+
+.back{
+    margin-top:15px;
+    background:#7c3aed;
+}
+
+.status{
+    margin-top:15px;
+    padding:10px;
+    background:#020617;
+    border-radius:8px;
+    text-align:center;
+    color:#93c5fd;
+}
+
+.history{
+    margin-top:20px;
+}
+
+.tip-card{
+    background:#020617;
+    padding:10px;
+    border-radius:8px;
+    margin-bottom:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="navbar">Anonymous Tips</div>
+
+<div class="container">
+
+<h2>Submit an Anonymous Tip</h2>
+
+<div class="notice">
+<strong>🛡️ Your identity is protected.</strong><br>
+No personal details are required. Submissions are encrypted and cannot be traced back to you.
+</div>
+
+<label>Tip Category *</label>
+<select id="category">
+<option value="">Select category</option>
+<option>Crime</option>
+<option>Harassment</option>
+<option>Corruption</option>
+<option>Missing Person</option>
+<option>Suspicious Activity</option>
+<option>Other</option>
+</select>
+
+<label>Location *</label>
+<input type="text" id="location" placeholder="Where did this happen?">
+
+<label>Describe what you know *</label>
+<textarea id="details" rows="5"
+placeholder="Be as specific as possible: time, people, vehicle, etc."></textarea>
+
+<label>Attach Evidence (optional)</label>
+<input type="file" id="file" accept="image/*,.pdf,.mp4">
+
+<button class="btn" onclick="submitTip()">Send Anonymous Tip</button>
+
+<div id="status" class="status">
+Your anonymity is guaranteed.
+</div>
+
+<h3 class="history">Your Recent Submissions (local preview)</h3>
+<div id="tipList">
+<div class="tip-card">No tips submitted yet.</div>
+</div>
+
+<button class="btn back" onclick="backHome()">Back to Dashboard</button>
+
+</div>
+
+<script>
+function submitTip(){
+
+    const category = document.getElementById("category").value;
+    const location = document.getElementById("location").value.trim();
+    const details = document.getElementById("details").value.trim();
+
+    if(!category || !location || !details){
+        document.getElementById("status").innerText =
+        "⚠️ Please fill all required fields.";
+        return;
+    }
+
+    const list = document.getElementById("tipList");
+
+    const card = document.createElement("div");
+    card.className = "tip-card";
+
+    card.innerHTML = `
+    <strong>🕶️ Anonymous Tip</strong><br>
+    📌 Category: ${category}<br>
+    📍 Location: ${location}<br>
+    📝 ${details}<br>
+    <small>Submitted just now</small>
+    `;
+
+    // Remove "no tips" message if present
+    if(list.children.length === 1){
+        list.innerHTML = "";
+    }
+
+    list.appendChild(card);
+
+    document.getElementById("status").innerText =
+    "✅ Tip submitted securely and anonymously.";
+
+    // clear form
+    document.getElementById("category").value = "";
+    document.getElementById("location").value = "";
+    document.getElementById("details").value = "";
+    document.getElementById("file").value = "";
+}
+
+function backHome(){
+    window.location.href = "dashboard.html";
+}
+</script>
+
+</body>
+</html>

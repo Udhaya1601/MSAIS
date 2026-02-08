@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Safe Route Navigation</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial;
+    background:#0b1220;
+    color:white;
+}
+
+.navbar{
+    padding:15px;
+    background:#0f172a;
+    text-align:center;
+    font-size:20px;
+    font-weight:bold;
+}
+
+.container{
+    max-width:900px;
+    margin:30px auto;
+    background:#111827;
+    padding:20px;
+    border-radius:12px;
+}
+
+.row{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:15px;
+}
+
+input{
+    width:100%;
+    padding:8px;
+    border-radius:6px;
+    border:none;
+}
+
+.btn{
+    margin-top:15px;
+    padding:10px;
+    width:100%;
+    background:#2563eb;
+    color:white;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.btn:hover{
+    background:#1d4ed8;
+}
+
+.map-box{
+    height:350px;
+    background:#020617;
+    border-radius:10px;
+    margin-top:15px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#93c5fd;
+    border:1px dashed #3b82f6;
+}
+
+.route-info{
+    margin-top:15px;
+    padding:10px;
+    background:#020617;
+    border-radius:8px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="navbar">Safe Route Navigation</div>
+
+<div class="container">
+
+<h2>Find the Safest Path</h2>
+
+<div class="row">
+<div>
+<label>From</label>
+<input type="text" id="from" placeholder="Your current location">
+</div>
+
+<div>
+<label>To</label>
+<input type="text" id="to" placeholder="Destination">
+</div>
+</div>
+
+<button class="btn" onclick="findRoute()">Find Safe Route</button>
+
+<div class="map-box" id="map">
+🗺️ Live Safe Route Map will load here
+</div>
+
+<div class="route-info" id="info">
+Select locations and click "Find Safe Route"
+</div>
+
+<button class="btn" style="background:#10b981" onclick="shareLive()">
+Share Live Location
+</button>
+
+<button class="btn" style="background:#7c3aed" onclick="backHome()">
+Back to Dashboard
+</button>
+
+</div>
+
+<script>
+function findRoute(){
+ document.getElementById("map").innerText =
+ "🔍 Calculating safest route with live crime & traffic data...";
+ document.getElementById("info").innerText =
+ "Recommended Route: Main Road → Police Station Area → Green Zone";
+}
+
+function shareLive(){
+ document.getElementById("info").innerText =
+ "📍 Live location shared with trusted contacts.";
+}
+
+function backHome(){
+ window.location.href = "dashboard.html";
+}
+</script>
+
+</body>
+</html>

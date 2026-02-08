@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Notifications | MSAIS</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial;
+    background:#0b1220;
+    color:white;
+}
+
+.navbar{
+    padding:15px;
+    background:#0f172a;
+    text-align:center;
+    font-size:20px;
+    font-weight:bold;
+}
+
+.container{
+    max-width:900px;
+    margin:30px auto;
+    background:#111827;
+    padding:20px;
+    border-radius:12px;
+}
+
+.top-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.filter{
+    padding:8px;
+    border-radius:6px;
+    border:none;
+}
+
+.badge{
+    background:#2563eb;
+    padding:6px 10px;
+    border-radius:20px;
+    font-size:14px;
+}
+
+.feed{
+    margin-top:20px;
+}
+
+.card{
+    background:#020617;
+    padding:12px;
+    border-radius:10px;
+    margin-bottom:10px;
+    border-left:4px solid #2563eb;
+}
+
+.card.unread{
+    border-left:4px solid #facc15;
+}
+
+.meta{
+    font-size:12px;
+    color:#93c5fd;
+}
+
+.actions{
+    margin-top:8px;
+    display:flex;
+    gap:10px;
+}
+
+.btn{
+    padding:6px 10px;
+    background:#2563eb;
+    color:white;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.btn:hover{
+    background:#1d4ed8;
+}
+
+.secondary{
+    background:#10b981;
+}
+
+.secondary:hover{
+    background:#0f766e;
+}
+
+.warning{
+    background:#dc2626;
+}
+
+.warning:hover{
+    background:#b91c1c;
+}
+
+.back{
+    margin-top:20px;
+    width:100%;
+    background:#7c3aed;
+}
+
+.status{
+    margin-top:15px;
+    padding:10px;
+    background:#020617;
+    border-radius:8px;
+    text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<div class="navbar">Notifications Center</div>
+
+<div class="container">
+
+<div class="top-row">
+<h2>Your Alerts</h2>
+
+<select class="filter" onchange="filterFeed(this.value)">
+<option value="all">All</option>
+<option value="unread">Unread</option>
+<option value="alerts">Emergency Alerts</option>
+<option value="system">System</option>
+</select>
+
+<div class="badge">
+Unread: <span id="unreadCount">3</span>
+</div>
+</div>
+
+<div class="feed" id="feed">
+
+<div class="card unread" data-type="alerts">
+<strong>🚨 Emergency Alert</strong>
+<div>Accident reported near Central Road.</div>
+<div class="meta">2 minutes ago • High Priority</div>
+<div class="actions">
+<button class="btn secondary" onclick="markRead(this)">Mark as Read</button>
+<button class="btn warning" onclick="dismiss(this)">Dismiss</button>
+</div>
+</div>
+
+<div class="card unread" data-type="system">
+<strong>⚙️ System Update</strong>
+<div>New safety features added to Safe Route.</div>
+<div class="meta">10 minutes ago</div>
+<div class="actions">
+<button class="btn secondary" onclick="markRead(this)">Mark as Read</button>
+<button class="btn warning" onclick="dismiss(this)">Dismiss</button>
+</div>
+</div>
+
+<div class="card" data-type="alerts">
+<strong>📍 Location Shared</strong>
+<div>Your live location was shared with contacts.</div>
+<div class="meta">1 hour ago</div>
+<div class="actions">
+<button class="btn warning" onclick="dismiss(this)">Dismiss</button>
+</div>
+</div>
+
+</div>
+
+<div id="status" class="status">
+Manage your alerts and stay informed.
+</div>
+
+<button class="btn back" onclick="backHome()">Back to Dashboard</button>
+
+</div>
+
+<script>
+function updateUnread(){
+    const unread = document.querySelectorAll(".card.unread").length;
+    document.getElementById("unreadCount").innerText = unread;
+}
+
+function markRead(btn){
+    const card = btn.closest(".card");
+    card.classList.remove("unread");
+    document.getElementById("status").innerText =
+      "✅ Notification marked as read.";
+    updateUnread();
+}
+
+function dismiss(btn){
+    const card = btn.closest(".card");
+    card.remove();
+    document.getElementById("status").innerText =
+      "🗑️ Notification dismissed.";
+    updateUnread();
+}
+
+function filterFeed(type){
+    const cards = document.querySelectorAll(".card");
+
+    cards.forEach(card => {
+        if(type === "all"){
+            card.style.display = "block";
+        } 
+        else if(type === "unread"){
+            card.style.display = card.classList.contains("unread") ? "block" : "none";
+        }
+        else {
+            card.style.display = card.dataset.type === type ? "block" : "none";
+        }
+    });
+
+    document.getElementById("status").innerText =
+      "Filtered by: " + type.toUpperCase();
+}
+
+function backHome(){
+    window.location.href = "dashboard.html";
+}
+</script>
+
+</body>
+</html>

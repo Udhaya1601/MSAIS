@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Emergency Alert | MSAIS</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #0b1220;
+      color: white;
+    }
+
+    .navbar {
+      background: #0f172a;
+      padding: 15px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 40px auto;
+      background: #111827;
+      padding: 25px;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    h2 {
+      color: #f87171;
+    }
+
+    .alert-btn {
+      margin-top: 20px;
+      padding: 15px;
+      width: 100%;
+      font-size: 18px;
+      font-weight: bold;
+      background: #dc2626;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .alert-btn:hover {
+      background: #b91c1c;
+    }
+
+    .secondary-btn {
+      margin-top: 15px;
+      padding: 10px;
+      width: 100%;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .status {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #a5b4fc;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="navbar">MSAIS – Emergency Alert</div>
+
+  <div class="container">
+    <h2>🚨 Emergency Mode</h2>
+    <p>If you are in danger, press the red button immediately.</p>
+
+    <button class="alert-btn" onclick="sendAlert()">SEND EMERGENCY ALERT</button>
+    <button class="secondary-btn" onclick="getLocation()">Share My Location</button>
+
+    <p id="status" class="status"></p>
+  </div>
+
+  <script>
+    function sendAlert() {
+      document.getElementById("status").innerText =
+        "⚠️ Emergency alert sent to authorities and trusted contacts!";
+    }
+
+    function getLocation() {
+      document.getElementById("status").innerText =
+        "📍 Fetching your live location... (simulated)";
+    }
+  </script>
+
+</body>
+</html>

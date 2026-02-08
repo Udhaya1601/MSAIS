@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MSAIS | Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root{
+  --bg:#0b1220;
+  --card:#111827;
+  --hover:#1f2937;
+  --text:#e5e7eb;
+  --muted:#9ca3af;
+  --accent:#3b82f6;
+  --admin:#8b5cf6;
+  --danger:#ef4444;
+  --radius:18px;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Segoe UI, Inter, Arial;
+  background:
+    radial-gradient(circle at 20% 20%, #1e3a8a55, transparent 40%),
+    radial-gradient(circle at 80% 80%, #7c3aed55, transparent 40%),
+    var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* MAIN CARD */
+.container{
+  width:100%;
+  max-width:900px;
+  background:linear-gradient(180deg,#020617,#020617cc);
+  border-radius:28px;
+  padding:40px;
+  box-shadow:0 40px 80px rgba(0,0,0,.6);
+}
+
+/* HEADER */
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:40px;
+}
+.logo{
+  font-size:28px;
+  font-weight:800;
+  letter-spacing:1px;
+  background:linear-gradient(90deg,#3b82f6,#8b5cf6);
+  -webkit-background-clip:text;
+  color:transparent;
+}
+.user{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+.avatar{
+  width:44px;height:44px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#3b82f6,#8b5cf6);
+  display:grid;
+  place-items:center;
+  font-weight:700;
+}
+
+/* DASH LINKS */
+.links{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:30px;
+  margin-bottom:40px;
+}
+.card{
+  background:linear-gradient(180deg,#111827,#020617);
+  border-radius:22px;
+  padding:30px;
+  cursor:pointer;
+  transition:.35s;
+  border:1px solid #1f2937;
+}
+.card:hover{
+  transform:translateY(-10px) scale(1.03);
+  background:linear-gradient(180deg,var(--hover),#020617);
+}
+.card h2{
+  margin:0 0 10px;
+}
+.card p{
+  margin:0;
+  color:var(--muted);
+}
+.user-card h2{color:var(--accent)}
+.admin-card h2{color:var(--admin)}
+
+/* FOOTER TOOLS */
+.tools{
+  display:flex;
+  flex-wrap:wrap;
+  gap:14px;
+  justify-content:space-between;
+}
+.left-tools, .right-tools{
+  display:flex;
+  gap:14px;
+}
+button{
+  padding:12px 18px;
+  border-radius:12px;
+  border:0;
+  cursor:pointer;
+  font-weight:600;
+}
+.tool{
+  background:#1f2937;
+  color:var(--text);
+}
+.tool:hover{background:#374151}
+.logout{
+  background:var(--danger);
+  color:white;
+}
+.logout:hover{opacity:.85}
+
+@media(max-width:700px){
+  .tools{flex-direction:column}
+  .left-tools,.right-tools{justify-content:center}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo">MSAIS</div>
+    <div class="user">
+      <div class="avatar" id="avatar">U</div>
+      <div>
+        <strong id="username">User</strong><br>
+        <small style="color:var(--muted)">Active Session</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD LINKS -->
+  <div class="links">
+    <div class="card user-card" onclick="goUser()">
+      <h2>👤 User Dashboard</h2>
+      <p>Access user features, personal activity, and safety tools.</p>
+    </div>
+
+    <div class="card admin-card" onclick="goAdmin()">
+      <h2>🛡️ Admin Dashboard</h2>
+      <p>System monitoring, analytics, and administrative controls.</p>
+    </div>
+  </div>
+
+  <!-- FOOTER / HOME TOOLS -->
+  <div class="tools">
+    <div class="left-tools">
+      <button class="tool" onclick="goHome()">🏠 Home</button>
+      <button class="tool" onclick="profile()">👤 Profile</button>
+      <button class="tool" onclick="settings()">⚙️ Settings</button>
+      <button class="tool" onclick="help()">❓ Help</button>
+    </div>
+
+    <div class="right-tools">
+      <button class="logout" onclick="logout()">🚪 Logout</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ===== NAVIGATION ===== */
+function goUser(){
+  window.location.href = "user_dashboard.html";
+}
+function goAdmin(){
+  window.location.href = "admin_dashboard.html";
+}
+function goHome(){
+  window.location.href = "home.html";
+}
+function profile(){
+  alert("Profile page (to be connected)");
+}
+function settings(){
+  alert("Settings page (to be connected)");
+}
+function help(){
+  alert("Help & support page");
+}
+function logout(){
+  window.location.href = "login.html";
+}
+
+/* OPTIONAL: LOAD USERNAME */
+const name = localStorage.getItem("msais_user");
+if(name){
+  document.getElementById("username").innerText = name;
+  document.getElementById("avatar").innerText = name[0].toUpperCase();
+}
+</script>
+
+</body>
+</html>

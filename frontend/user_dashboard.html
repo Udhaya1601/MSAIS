@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MSAIS Dashboard | Smart Security Services</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0e27;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(79, 172, 254, 0.08) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(138, 43, 226, 0.08) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(0, 242, 254, 0.08) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(255, 82, 82, 0.08) 0px, transparent 50%);
+            color: #f0f0f0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(255,255,255,0.02)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Dashboard Container */
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header with user info */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding: 25px 30px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-left h1 {
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 50%, #8a2be2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .header-left p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .user-profile:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(79, 172, 254, 0.4);
+            box-shadow: 0 0 20px rgba(79, 172, 254, 0.2);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: #fff;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: white;
+            padding: 12px 28px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .back-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .back-btn:hover::before {
+            left: 100%;
+        }
+
+        .back-btn:hover {
+            background: rgba(79, 172, 254, 0.2);
+            border-color: rgba(79, 172, 254, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79, 172, 254, 0.3);
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 28px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(79, 172, 254, 0.05), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .stat-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            transform: translateY(-8px);
+            border-color: rgba(79, 172, 254, 0.3);
+            box-shadow: 0 16px 48px rgba(79, 172, 254, 0.2);
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+
+        .stat-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            background: rgba(79, 172, 254, 0.1);
+            position: relative;
+            box-shadow: 0 8px 24px rgba(79, 172, 254, 0.2);
+        }
+
+        .stat-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-content h3 {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 6px;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-content p {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        /* Dashboard Grid - Strict 3x4 layout */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        /* Tile Styling */
+        .tile {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            text-align: center;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 35px 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .tile::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--tile-color), transparent);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .tile::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--tile-color);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .tile:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4), 0 0 40px var(--tile-glow);
+            border-color: var(--tile-color);
+        }
+
+        .tile:hover::before {
+            opacity: 0.1;
+        }
+
+        .tile:hover::after {
+            opacity: 1;
+        }
+
+        .icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .tile:hover .icon {
+            transform: scale(1.15) rotate(-5deg);
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .label {
+            font-size: 17px;
+            font-weight: 700;
+            line-height: 1.3;
+            letter-spacing: 0.2px;
+            margin-bottom: 8px;
+            color: #fff;
+            position: relative;
+            z-index: 1;
+        }
+
+        .sub-label {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 500;
+            max-width: 90%;
+            line-height: 1.5;
+            position: relative;
+            z-index: 1;
+        }
+
+        .badge {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            background: linear-gradient(135deg, #ff4757, #ff6b7a);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(255, 71, 87, 0.4);
+            z-index: 2;
+        }
+
+        /* Enhanced color system */
+        .tile[data-color="c1"] {
+            --tile-color: #ff5252;
+            --tile-glow: rgba(255, 82, 82, 0.3);
+        }
+
+        .tile[data-color="c2"] {
+            --tile-color: #ff9800;
+            --tile-glow: rgba(255, 152, 0, 0.3);
+        }
+
+        .tile[data-color="c3"] {
+            --tile-color: #e91e63;
+            --tile-glow: rgba(233, 30, 99, 0.3);
+        }
+
+        .tile[data-color="c4"] {
+            --tile-color: #03a9f4;
+            --tile-glow: rgba(3, 169, 244, 0.3);
+        }
+
+        .tile[data-color="c5"] {
+            --tile-color: #795548;
+            --tile-glow: rgba(121, 85, 72, 0.3);
+        }
+
+        .tile[data-color="c6"] {
+            --tile-color: #607d8b;
+            --tile-glow: rgba(96, 125, 139, 0.3);
+        }
+
+        .tile[data-color="c7"] {
+            --tile-color: #673ab7;
+            --tile-glow: rgba(103, 58, 183, 0.3);
+        }
+
+        .tile[data-color="c8"] {
+            --tile-color: #009688;
+            --tile-glow: rgba(0, 150, 136, 0.3);
+        }
+
+        .tile[data-color="c9"] {
+            --tile-color: #2196f3;
+            --tile-glow: rgba(33, 150, 243, 0.3);
+        }
+
+        .tile[data-color="c10"] {
+            --tile-color: #ff5722;
+            --tile-glow: rgba(255, 87, 34, 0.3);
+        }
+
+        .tile[data-color="c11"] {
+            --tile-color: #8bc34a;
+            --tile-glow: rgba(139, 195, 74, 0.3);
+        }
+
+        .tile[data-color="c12"] {
+            --tile-color: #9c27b0;
+            --tile-glow: rgba(156, 39, 176, 0.3);
+        }
+
+        .c1 {
+            background: linear-gradient(135deg, rgba(255, 82, 82, 0.8) 0%, rgba(255, 123, 123, 0.9) 100%);
+        }
+
+        .c2 {
+            background: linear-gradient(135deg, rgba(255, 152, 0, 0.8) 0%, rgba(255, 183, 77, 0.9) 100%);
+        }
+
+        .c3 {
+            background: linear-gradient(135deg, rgba(233, 30, 99, 0.8) 0%, rgba(244, 143, 177, 0.9) 100%);
+        }
+
+        .c4 {
+            background: linear-gradient(135deg, rgba(3, 169, 244, 0.8) 0%, rgba(129, 212, 250, 0.9) 100%);
+        }
+
+        .c5 {
+            background: linear-gradient(135deg, rgba(121, 85, 72, 0.8) 0%, rgba(161, 136, 127, 0.9) 100%);
+        }
+
+        .c6 {
+            background: linear-gradient(135deg, rgba(96, 125, 139, 0.8) 0%, rgba(144, 164, 174, 0.9) 100%);
+        }
+
+        .c7 {
+            background: linear-gradient(135deg, rgba(103, 58, 183, 0.8) 0%, rgba(149, 117, 205, 0.9) 100%);
+        }
+
+        .c8 {
+            background: linear-gradient(135deg, rgba(0, 150, 136, 0.8) 0%, rgba(77, 182, 172, 0.9) 100%);
+        }
+
+        .c9 {
+            background: linear-gradient(135deg, rgba(33, 150, 243, 0.8) 0%, rgba(100, 181, 246, 0.9) 100%);
+        }
+
+        .c10 {
+            background: linear-gradient(135deg, rgba(255, 87, 34, 0.8) 0%, rgba(255, 138, 101, 0.9) 100%);
+        }
+
+        .c11 {
+            background: linear-gradient(135deg, rgba(139, 195, 74, 0.8) 0%, rgba(174, 213, 129, 0.9) 100%);
+        }
+
+        .c12 {
+            background: linear-gradient(135deg, rgba(156, 39, 176, 0.8) 0%, rgba(206, 147, 216, 0.9) 100%);
+        }
+
+        /* Quick Actions Bar */
+        .quick-actions {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 40px;
+            justify-content: flex-end;
+        }
+
+        .action-btn {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #f0f0f0;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translate(-50%, -50%);
+            transition: width 0.5s, height 0.5s;
+        }
+
+        .action-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .action-btn:hover {
+            background: rgba(79, 172, 254, 0.15);
+            border-color: rgba(79, 172, 254, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(79, 172, 254, 0.3);
+        }
+
+        .action-btn i {
+            position: relative;
+            z-index: 1;
+        }
+
+        .action-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Footer */
+        .dashboard-footer {
+            text-align: center;
+            padding: 35px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.5);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            margin-top: 40px;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 15px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .footer-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #4facfe, #00f2fe);
+            transition: width 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #4facfe;
+        }
+
+        .footer-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Focus styles for accessibility */
+        .tile:focus-visible {
+            outline: 2px solid #4facfe;
+            outline-offset: 4px;
+        }
+
+        .back-btn:focus-visible,
+        .action-btn:focus-visible {
+            outline: 2px solid #4facfe;
+            outline-offset: 2px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1200px) {
+            .dashboard-grid {
+                gap: 20px;
+            }
+
+            .tile {
+                padding: 30px 20px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: repeat(6, 1fr);
+            }
+
+            .stats-bar {
+                flex-wrap: wrap;
+            }
+
+            .stat-card {
+                min-width: calc(50% - 12px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                grid-template-rows: repeat(12, 1fr);
+                gap: 16px;
+            }
+
+            .tile {
+                padding: 24px 20px;
+            }
+
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+                padding: 20px;
+            }
+
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .stats-bar {
+                flex-direction: column;
+            }
+
+            .stat-card {
+                width: 100%;
+            }
+
+            .quick-actions {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+        }
+
+        /* Animation for tiles */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .tile {
+            animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            opacity: 0;
+        }
+
+        .tile:nth-child(1) { animation-delay: 0.05s; }
+        .tile:nth-child(2) { animation-delay: 0.1s; }
+        .tile:nth-child(3) { animation-delay: 0.15s; }
+        .tile:nth-child(4) { animation-delay: 0.2s; }
+        .tile:nth-child(5) { animation-delay: 0.25s; }
+        .tile:nth-child(6) { animation-delay: 0.3s; }
+        .tile:nth-child(7) { animation-delay: 0.35s; }
+        .tile:nth-child(8) { animation-delay: 0.4s; }
+        .tile:nth-child(9) { animation-delay: 0.45s; }
+        .tile:nth-child(10) { animation-delay: 0.5s; }
+        .tile:nth-child(11) { animation-delay: 0.55s; }
+        .tile:nth-child(12) { animation-delay: 0.6s; }
+
+        /* Smooth header animation */
+        .dashboard-header {
+            animation: fadeInDown 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Stats bar animation */
+        .stat-card {
+            animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            opacity: 0;
+        }
+
+        .stat-card:nth-child(1) { animation-delay: 0.2s; }
+        .stat-card:nth-child(2) { animation-delay: 0.3s; }
+        .stat-card:nth-child(3) { animation-delay: 0.4s; }
+    </style>
+</head>
+
+<body>
+
+    <div class="dashboard-container">
+
+        <!-- Header with user info and back button -->
+        <div class="dashboard-header">
+            <div class="header-left">
+                <h1>MSAIS Smart Services</h1>
+                <p>Your complete security and emergency management dashboard</p>
+            </div>
+
+            <div class="header-right">
+                <div class="user-profile">
+                </div>
+
+                <button class="back-btn" onclick="goBack()">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back to Portal</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats Bar -->
+        <div class="stats-bar">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: rgba(79, 172, 254, 0.15); color: #4facfe;">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>98%</h3>
+                    <p>System Security</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: rgba(0, 150, 136, 0.15); color: #009688;">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>24</h3>
+                    <p>Active Services</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: rgba(255, 152, 0, 0.15); color: #ff9800;">
+                    <i class="fas fa-bell"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>3</h3>
+                    <p>New Alerts</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <button class="action-btn" onclick="go('settings.html')">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </button>
+            <button class="action-btn" onclick="go('help.html')">
+                <i class="fas fa-question-circle"></i>
+                <span>Help</span>
+            </button>
+            <button class="action-btn" onclick="refreshDashboard()">
+                <i class="fas fa-sync-alt"></i>
+                <span>Refresh</span>
+            </button>
+        </div>
+
+        <!-- Main Dashboard Grid - Strict 3x4 Layout -->
+        <div class="dashboard-grid">
+
+            <div class="tile" onclick="go('report_incident.html')" tabindex="0" data-color="c1">
+                <div class="icon c1">🚨</div>
+                <div class="label">Report Incident</div>
+                <div class="sub-label">File a new emergency incident report</div>
+                <div class="badge">HIGH PRIORITY</div>
+            </div>
+
+            <div class="tile" onclick="go('alerts.html')" tabindex="0" data-color="c3">
+                <div class="icon c3">⚠️</div>
+                <div class="label">Emergency Alerts</div>
+                <div class="sub-label">Real-time critical notifications</div>
+            </div>
+
+            <div class="tile" onclick="go('safe_route.html')" tabindex="0" data-color="c11">
+                <div class="icon c11">🗺️</div>
+                <div class="label">Safe Route Navigation</div>
+                <div class="sub-label">Find secure paths with live updates</div>
+            </div>
+
+            <div class="tile" onclick="go('missing_person.html')" tabindex="0" data-color="c2">
+                <div class="icon c2">🧍</div>
+                <div class="label">Missing Person</div>
+                <div class="sub-label">Report or search for missing persons</div>
+                <div class="badge">NEW</div>
+            </div>
+
+            <div class="tile" onclick="go('evidence_manager.html')" tabindex="0" data-color="c9">
+                <div class="icon c9">📁</div>
+                <div class="label">Evidence Manager</div>
+                <div class="label">Secure digital evidence storage</div>
+            </div>
+
+            <div class="tile" onclick="go('marketplace.html')" tabindex="0" data-color="c12">
+                <div class="icon c12">🛒</div>
+                <div class="label">Emergency Marketplace</div>
+                <div class="sub-label">Essential resources and supplies</div>
+            </div>
+
+            <div class="tile" onclick="go('volunteer.html')" tabindex="0" data-color="c4">
+                <div class="icon c4">🤝</div>
+                <div class="label">Volunteer Network</div>
+                <div class="sub-label">Join or request volunteer assistance</div>
+            </div>
+
+            <div class="tile" onclick="go('anonymous_tip.html')" tabindex="0" data-color="c5">
+                <div class="icon c5">🕵️</div>
+                <div class="label">Anonymous Tips</div>
+                <div class="sub-label">Share information securely & privately</div>
+            </div>
+
+            <div class="tile" onclick="go('family_tracking.html')" tabindex="0" data-color="c6">
+                <div class="icon c6">👨‍👩‍👧</div>
+                <div class="label">Family Tracking</div>
+                <div class="sub-label">Monitor loved ones in emergencies</div>
+            </div>
+
+            <div class="tile" onclick="go('voice_assistant.html')" tabindex="0" data-color="c7">
+                <div class="icon c7">🎙️</div>
+                <div class="label">Voice Assistant</div>
+                <div class="sub-label">Hands-free emergency assistance</div>
+            </div>
+
+            <div class="tile" onclick="go('analytics.html')" tabindex="0" data-color="c8">
+                <div class="icon c8">📊</div>
+                <div class="label">Analytics Dashboard</div>
+                <div class="sub-label">Security insights and trends</div>
+            </div>
+
+            <div class="tile" onclick="go('notifications.html')" tabindex="0" data-color="c10">
+                <div class="icon c10">🔔</div>
+                <div class="label">Notifications Center</div>
+                <div class="sub-label">Manage all your alerts & messages</div>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="dashboard-footer">
+            <p>MSAIS &copy; 2023 | Multi-Service AI Security Platform v2.1</p>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Security</a>
+                <a href="#">Contact Support</a>
+                <a href="#">System Status</a>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function go(page) {
+            // Add a loading indicator
+            const tile = event.currentTarget;
+            tile.style.pointerEvents = 'none';
+
+            const originalTransform = tile.style.transform;
+            tile.style.transform = originalTransform + ' scale(0.95)';
+
+            setTimeout(() => {
+                location.href = page;
+            }, 300);
+        }
+
+        function goBack() {
+            // Add a smooth transition
+            document.querySelector('.back-btn').style.transform = 'translateY(2px)';
+
+            setTimeout(() => {
+                if (document.referrer && document.referrer.includes(window.location.hostname)) {
+                    history.back();
+                } else {
+                    location.href = 'index.html';
+                }
+            }, 200);
+        }
+
+        function refreshDashboard() {
+            const btn = event.currentTarget;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Refreshing...';
+            btn.disabled = true;
+
+            // Simulate refresh delay
+            setTimeout(() => {
+                location.reload();
+            }, 800);
+        }
+
+        // Add keyboard navigation support
+        document.addEventListener('DOMContentLoaded', function () {
+            const tiles = document.querySelectorAll('.tile');
+
+            tiles.forEach(tile => {
+                tile.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.click();
+                    }
+                });
+            });
+
+            // Initialize tooltips
+            tiles.forEach(tile => {
+                tile.title = "Click to open " + tile.querySelector('.label').textContent;
+            });
+
+            // Add a subtle hover effect for desktop users
+            if (window.innerWidth > 768) {
+                document.addEventListener('mousemove', function (e) {
+                    const tiles = document.querySelectorAll('.tile');
+                    tiles.forEach(tile => {
+                        const rect = tile.getBoundingClientRect();
+                        const x = e.clientX - rect.left;
+                        const y = e.clientY - rect.top;
+
+                        tile.style.setProperty('--mouse-x', x + 'px');
+                        tile.style.setProperty('--mouse-y', y + 'px');
+                    });
+                });
+            }
+        });
+
+        // Add a welcome notification
+        setTimeout(() => {
+            console.log("%c🔐 MSAIS Dashboard Loaded Successfully", "color: #4facfe; font-size: 16px; font-weight: bold;");
+            console.log("%cAll security systems are operational. Welcome back, John.", "color: #8bc34a; font-size: 14px;");
+        }, 1000);
+    </script>
+
+</body>
+
+</html>

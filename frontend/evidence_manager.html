@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Evidence Manager | MSAIS</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial;
+    background:#0b1220;
+    color:white;
+}
+
+.navbar{
+    padding:15px;
+    background:#0f172a;
+    text-align:center;
+    font-size:20px;
+    font-weight:bold;
+}
+
+.container{
+    max-width:1000px;
+    margin:30px auto;
+    background:#111827;
+    padding:20px;
+    border-radius:12px;
+}
+
+.upload-box{
+    padding:20px;
+    border:2px dashed #3b82f6;
+    border-radius:10px;
+    text-align:center;
+    margin-bottom:20px;
+}
+
+input[type="file"]{
+    margin-top:10px;
+}
+
+.btn{
+    margin-top:10px;
+    padding:10px 15px;
+    background:#2563eb;
+    color:white;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.btn:hover{
+    background:#1d4ed8;
+}
+
+.back{
+    background:#10b981;
+}
+
+.back:hover{
+    background:#0f766e;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap:15px;
+}
+
+.card{
+    background:#020617;
+    padding:10px;
+    border-radius:10px;
+    text-align:center;
+}
+
+.card img{
+    width:100%;
+    height:160px;
+    object-fit:cover;
+    border-radius:8px;
+    display:none;
+}
+
+.card p{
+    font-size:13px;
+    color:#93c5fd;
+}
+
+.remove{
+    margin-top:8px;
+    background:#dc2626;
+}
+
+.remove:hover{
+    background:#b91c1c;
+}
+
+.status{
+    margin-top:15px;
+    padding:10px;
+    background:#020617;
+    border-radius:8px;
+    text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<div class="navbar">Evidence Manager</div>
+
+<div class="container">
+
+<h2>Secure Evidence Vault</h2>
+
+<div class="upload-box">
+<h3>Upload Evidence</h3>
+<p>Images, videos, PDFs, or documents</p>
+
+<input type="file" id="fileInput" multiple accept="image/*,.pdf,.doc,.docx,.mp4">
+
+<button class="btn" onclick="addEvidence()">Add to Vault</button>
+</div>
+
+<h3>Your Evidence Collection</h3>
+
+<div class="grid" id="evidenceGrid">
+<!-- Evidence cards will appear here -->
+</div>
+
+<div id="status" class="status">
+No evidence uploaded yet.
+</div>
+
+<button class="btn back" onclick="backHome()">Back to Dashboard</button>
+
+</div>
+
+<script>
+let counter = 0;
+
+function addEvidence(){
+    const files = document.getElementById("fileInput").files;
+    const grid = document.getElementById("evidenceGrid");
+
+    if(files.length === 0){
+        document.getElementById("status").innerText =
+        "⚠️ Please select at least one file.";
+        return;
+    }
+
+    for(let i=0;i<files.length;i++){
+        const file = files[i];
+        counter++;
+
+        const card = document.createElement("div");
+        card.className = "card";
+        card.id = "evidence-" + counter;
+
+        const title = document.createElement("h4");
+        title.innerText = file.name;
+
+        const img = document.createElement("img");
+        img.id = "img-" + counter;
+
+        if(file.type.startsWith("image")){
+            const reader = new FileReader();
+            reader.onload = function(e){
+                img.src = e.target.result;
+                img.style.display = "block";
+            }
+            reader.readAsDataURL(file);
+        }
+
+        const info = document.createElement("p");
+        info.innerText =
+        "Type: " + file.type + " | Size: " +
+        (file.size/1024).toFixed(1) + " KB";
+
+        const removeBtn = document.createElement("button");
+        removeBtn.className = "btn remove";
+        removeBtn.innerText = "Remove";
+        removeBtn.onclick = function(){
+            grid.removeChild(card);
+            document.getElementById("status").innerText =
+            "🗑️ Evidence removed from vault.";
+        };
+
+        card.appendChild(title);
+        card.appendChild(img);
+        card.appendChild(info);
+        card.appendChild(removeBtn);
+
+        grid.appendChild(card);
+    }
+
+    document.getElementById("status").innerText =
+    "✅ Evidence securely added to vault.";
+}
+
+function backHome(){
+    window.location.href = "dashboard.html";
+}
+</script>
+
+</body>
+</html>

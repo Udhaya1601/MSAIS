@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Voice Assistant | MSAIS</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial;
+    background:#0b1220;
+    color:white;
+}
+
+.navbar{
+    padding:15px;
+    background:#0f172a;
+    text-align:center;
+    font-size:20px;
+    font-weight:bold;
+}
+
+.container{
+    max-width:900px;
+    margin:30px auto;
+    background:#111827;
+    padding:20px;
+    border-radius:12px;
+    text-align:center;
+}
+
+.mic-circle{
+    width:160px;
+    height:160px;
+    margin:20px auto;
+    border-radius:50%;
+    background: radial-gradient(circle,#2563eb,#0b1220);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:60px;
+    cursor:pointer;
+    box-shadow: 0 0 15px #2563eb;
+}
+
+.mic-circle.listening{
+    animation:pulse 1.2s infinite;
+}
+
+@keyframes pulse{
+    0%{box-shadow:0 0 5px #2563eb;}
+    50%{box-shadow:0 0 25px #2563eb;}
+    100%{box-shadow:0 0 5px #2563eb;}
+}
+
+.btn-row{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:15px;
+    margin-top:20px;
+}
+
+.btn{
+    padding:10px;
+    background:#2563eb;
+    color:white;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.btn:hover{
+    background:#1d4ed8;
+}
+
+.secondary{
+    background:#10b981;
+}
+
+.secondary:hover{
+    background:#0f766e;
+}
+
+.warning{
+    background:#dc2626;
+}
+
+.warning:hover{
+    background:#b91c1c;
+}
+
+.back{
+    margin-top:20px;
+    background:#7c3aed;
+}
+
+.status{
+    margin-top:15px;
+    padding:10px;
+    background:#020617;
+    border-radius:8px;
+    color:#93c5fd;
+}
+
+.commands{
+    margin-top:20px;
+    text-align:left;
+    background:#020617;
+    padding:12px;
+    border-radius:8px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="navbar">Voice Emergency Assistant</div>
+
+<div class="container">
+
+<h2>Tap the Mic or Speak a Command</h2>
+
+<div id="mic" class="mic-circle" onclick="toggleListening()">
+🎙️
+</div>
+
+<div id="status" class="status">
+Assistant is idle. Tap the mic to speak.
+</div>
+
+<div class="btn-row">
+<button class="btn secondary" onclick="simulateCommand('call police')">
+Call Police
+</button>
+
+<button class="btn secondary" onclick="simulateCommand('send location')">
+Share My Location
+</button>
+
+<button class="btn" onclick="simulateCommand('report incident')">
+Report Incident
+</button>
+
+<button class="btn warning" onclick="simulateCommand('panic')">
+Panic Alert
+</button>
+</div>
+
+<div class="commands">
+<strong>Try saying:</strong>
+<ul>
+<li>“Call police”</li>
+<li>“Send my location”</li>
+<li>“Report an incident”</li>
+<li>“I am in danger”</li>
+<li>“Find safe route to home”</li>
+</ul>
+</div>
+
+<button class="btn back" onclick="backHome()">Back to Dashboard</button>
+
+</div>
+
+<script>
+let listening = false;
+
+function toggleListening(){
+    listening = !listening;
+    const mic = document.getElementById("mic");
+    const status = document.getElementById("status");
+
+    if(listening){
+        mic.classList.add("listening");
+        status.innerText =
+        "🎧 Listening... Speak now.";
+    } else {
+        mic.classList.remove("listening");
+        status.innerText =
+        "Assistant is idle. Tap the mic to speak.";
+    }
+}
+
+function simulateCommand(cmd){
+    const status = document.getElementById("status");
+
+    switch(cmd){
+        case "call police":
+            status.innerText =
+            "🚓 Calling nearest police station...";
+            break;
+
+        case "send location":
+            status.innerText =
+            "📍 Sharing your live location with trusted contacts.";
+            break;
+
+        case "report incident":
+            status.innerText =
+            "📝 Opening incident report form...";
+            setTimeout(()=>{
+                window.location.href="report_incident.html";
+            },1200);
+            break;
+
+        case "panic":
+            status.innerText =
+            "🚨 PANIC ALERT SENT! Authorities notified.";
+            break;
+
+        default:
+            status.innerText =
+            "🤖 Command received: " + cmd;
+    }
+}
+
+function backHome(){
+    window.location.href = "dashboard.html";
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1383 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | MSAIS Control Center</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --primary-red: #e63946;
+            --dark-red: #a4161a;
+            --light-red: #ff686b;
+            --bright-red: #ff5252;
+            --deep-red: #660708;
+            --dark-bg: #0a0a0a;
+            --card-bg: #1a1a1a;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-light: #f8f9fa;
+            --text-muted: #adb5bd;
+            --success-color: #06d6a0;
+            --warning-color: #ffd166;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(230, 57, 70, 0.08) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(164, 22, 26, 0.08) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(255, 104, 107, 0.08) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(102, 7, 8, 0.08) 0px, transparent 50%);
+            color: var(--text-light);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(230,57,70,0.03)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Dashboard Container */
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header with admin controls */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding: 25px 30px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            flex-wrap: wrap;
+            gap: 20px;
+            animation: fadeInDown 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header-left h1 {
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #e63946 0%, #ff686b 50%, #ff5252 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .header-left p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .admin-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 20px;
+            background: rgba(230, 57, 70, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            border: 1px solid rgba(230, 57, 70, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .admin-profile:hover {
+            background: rgba(230, 57, 70, 0.12);
+            border-color: rgba(230, 57, 70, 0.4);
+            box-shadow: 0 0 20px rgba(230, 57, 70, 0.2);
+        }
+
+        .admin-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--dark-red) 0%, var(--primary-red) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            box-shadow: 0 4px 12px rgba(230, 57, 70, 0.4);
+        }
+
+        .admin-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .admin-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: #fff;
+        }
+
+        .admin-role {
+            font-size: 12px;
+            color: var(--light-red);
+            font-weight: 500;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: white;
+            padding: 12px 28px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .back-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(230, 57, 70, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .back-btn:hover::before {
+            left: 100%;
+        }
+
+        .back-btn:hover {
+            background: rgba(230, 57, 70, 0.15);
+            border-color: rgba(230, 57, 70, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(230, 57, 70, 0.3);
+        }
+
+        /* Security Metrics Bar */
+        .metrics-bar {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .metric-card {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 28px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            opacity: 0;
+        }
+
+        .metric-card:nth-child(1) { animation-delay: 0.2s; }
+        .metric-card:nth-child(2) { animation-delay: 0.3s; }
+        .metric-card:nth-child(3) { animation-delay: 0.4s; }
+        .metric-card:nth-child(4) { animation-delay: 0.5s; }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(230, 57, 70, 0.05), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .metric-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            transform: translateY(-8px);
+            border-color: rgba(230, 57, 70, 0.3);
+            box-shadow: 0 16px 48px rgba(230, 57, 70, 0.2);
+        }
+
+        .metric-card:hover::before {
+            opacity: 1;
+        }
+
+        .metric-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            background: rgba(230, 57, 70, 0.1);
+            color: var(--primary-red);
+            position: relative;
+            box-shadow: 0 8px 24px rgba(230, 57, 70, 0.2);
+        }
+
+        .metric-content {
+            flex: 1;
+            position: relative;
+            z-index: 1;
+        }
+
+        .metric-value {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #e63946, #ff686b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .metric-label {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .metric-trend {
+            font-size: 12px;
+            padding: 3px 10px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 600;
+        }
+
+        .trend-up {
+            background: rgba(6, 214, 160, 0.15);
+            color: var(--success-color);
+        }
+
+        .trend-down {
+            background: rgba(230, 57, 70, 0.15);
+            color: var(--primary-red);
+        }
+
+        .trend-neutral {
+            background: rgba(255, 209, 102, 0.15);
+            color: var(--warning-color);
+        }
+
+        /* Quick Admin Actions */
+        .admin-actions {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .action-btn {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #f0f0f0;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(230, 57, 70, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.5s, height 0.5s;
+        }
+
+        .action-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .action-btn:hover {
+            background: rgba(230, 57, 70, 0.15);
+            border-color: rgba(230, 57, 70, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(230, 57, 70, 0.3);
+        }
+
+        .action-btn.primary {
+            background: rgba(230, 57, 70, 0.15);
+            border-color: rgba(230, 57, 70, 0.3);
+        }
+
+        .action-btn.primary:hover {
+            background: rgba(230, 57, 70, 0.25);
+            border-color: rgba(230, 57, 70, 0.5);
+        }
+
+        .action-btn.danger {
+            background: rgba(230, 57, 70, 0.25);
+            border-color: rgba(230, 57, 70, 0.4);
+        }
+
+        .action-btn.danger:hover {
+            background: rgba(230, 57, 70, 0.35);
+            border-color: rgba(230, 57, 70, 0.6);
+        }
+
+        .action-btn i,
+        .action-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        /* Tile Styling */
+        .tile {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            text-align: center;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 35px 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .tile::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--tile-color), transparent);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .tile::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--tile-color);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .tile:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4), 0 0 40px var(--tile-glow);
+            border-color: var(--tile-color);
+        }
+
+        .tile:hover::before {
+            opacity: 0.1;
+        }
+
+        .tile:hover::after {
+            opacity: 1;
+        }
+
+        .icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .tile:hover .icon {
+            transform: scale(1.15) rotate(-5deg);
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .label {
+            font-size: 17px;
+            font-weight: 700;
+            line-height: 1.3;
+            letter-spacing: 0.2px;
+            margin-bottom: 8px;
+            color: #fff;
+            position: relative;
+            z-index: 1;
+        }
+
+        .sub-label {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 500;
+            max-width: 90%;
+            line-height: 1.5;
+            position: relative;
+            z-index: 1;
+        }
+
+        .badge {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            background: linear-gradient(135deg, #e63946, #ff686b);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(230, 57, 70, 0.4);
+            z-index: 2;
+        }
+
+        /* Red, Black & White Color System */
+        .tile[data-color="c1"] {
+            --tile-color: #e63946;
+            --tile-glow: rgba(230, 57, 70, 0.3);
+        }
+
+        .tile[data-color="c2"] {
+            --tile-color: #d00000;
+            --tile-glow: rgba(208, 0, 0, 0.3);
+        }
+
+        .tile[data-color="c3"] {
+            --tile-color: #ff686b;
+            --tile-glow: rgba(255, 104, 107, 0.3);
+        }
+
+        .tile[data-color="c4"] {
+            --tile-color: #a4161a;
+            --tile-glow: rgba(164, 22, 26, 0.3);
+        }
+
+        .tile[data-color="c5"] {
+            --tile-color: #ba181b;
+            --tile-glow: rgba(186, 24, 27, 0.3);
+        }
+
+        .tile[data-color="c6"] {
+            --tile-color: #e5383b;
+            --tile-glow: rgba(229, 56, 59, 0.3);
+        }
+
+        .tile[data-color="c7"] {
+            --tile-color: #660708;
+            --tile-glow: rgba(102, 7, 8, 0.3);
+        }
+
+        .tile[data-color="c8"] {
+            --tile-color: #b10f2e;
+            --tile-glow: rgba(177, 15, 46, 0.3);
+        }
+
+        .tile[data-color="c9"] {
+            --tile-color: #9d0208;
+            --tile-glow: rgba(157, 2, 8, 0.3);
+        }
+
+        .tile[data-color="c10"] {
+            --tile-color: #dc2f02;
+            --tile-glow: rgba(220, 47, 2, 0.3);
+        }
+
+        .tile[data-color="c11"] {
+            --tile-color: #d90429;
+            --tile-glow: rgba(217, 4, 41, 0.3);
+        }
+
+        .tile[data-color="c12"] {
+            --tile-color: #ef233c;
+            --tile-glow: rgba(239, 35, 60, 0.3);
+        }
+
+        .c1 {
+            background: linear-gradient(135deg, rgba(230, 57, 70, 0.8) 0%, rgba(255, 104, 107, 0.9) 100%);
+        }
+
+        .c2 {
+            background: linear-gradient(135deg, rgba(208, 0, 0, 0.8) 0%, rgba(230, 57, 70, 0.9) 100%);
+        }
+
+        .c3 {
+            background: linear-gradient(135deg, rgba(255, 104, 107, 0.8) 0%, rgba(255, 123, 123, 0.9) 100%);
+        }
+
+        .c4 {
+            background: linear-gradient(135deg, rgba(164, 22, 26, 0.8) 0%, rgba(186, 24, 27, 0.9) 100%);
+        }
+
+        .c5 {
+            background: linear-gradient(135deg, rgba(186, 24, 27, 0.8) 0%, rgba(208, 0, 0, 0.9) 100%);
+        }
+
+        .c6 {
+            background: linear-gradient(135deg, rgba(229, 56, 59, 0.8) 0%, rgba(230, 57, 70, 0.9) 100%);
+        }
+
+        .c7 {
+            background: linear-gradient(135deg, rgba(102, 7, 8, 0.8) 0%, rgba(157, 2, 8, 0.9) 100%);
+        }
+
+        .c8 {
+            background: linear-gradient(135deg, rgba(177, 15, 46, 0.8) 0%, rgba(208, 0, 0, 0.9) 100%);
+        }
+
+        .c9 {
+            background: linear-gradient(135deg, rgba(157, 2, 8, 0.8) 0%, rgba(186, 24, 27, 0.9) 100%);
+        }
+
+        .c10 {
+            background: linear-gradient(135deg, rgba(220, 47, 2, 0.8) 0%, rgba(230, 57, 70, 0.9) 100%);
+        }
+
+        .c11 {
+            background: linear-gradient(135deg, rgba(217, 4, 41, 0.8) 0%, rgba(239, 35, 60, 0.9) 100%);
+        }
+
+        .c12 {
+            background: linear-gradient(135deg, rgba(239, 35, 60, 0.8) 0%, rgba(255, 104, 107, 0.9) 100%);
+        }
+
+        /* System Status Bar */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 30px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .status-indicator.active {
+            background: var(--success-color);
+            animation: pulse 2s infinite;
+        }
+
+        .status-indicator.warning {
+            background: var(--warning-color);
+            animation: pulse 2s infinite;
+        }
+
+        .status-indicator.danger {
+            background: var(--primary-red);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 currentColor;
+                opacity: 1;
+            }
+            70% {
+                box-shadow: 0 0 0 10px transparent;
+                opacity: 0.7;
+            }
+            100% {
+                box-shadow: 0 0 0 0 transparent;
+                opacity: 1;
+            }
+        }
+
+        .status-text {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+        }
+
+        .status-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary-red);
+        }
+
+        /* Focus styles */
+        .tile:focus-visible {
+            outline: 2px solid var(--primary-red);
+            outline-offset: 4px;
+        }
+
+        .back-btn:focus-visible,
+        .action-btn:focus-visible {
+            outline: 2px solid var(--primary-red);
+            outline-offset: 2px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1200px) {
+            .dashboard-grid {
+                gap: 20px;
+            }
+
+            .tile {
+                padding: 30px 20px;
+            }
+
+            .metrics-bar {
+                flex-wrap: wrap;
+            }
+
+            .metric-card {
+                min-width: calc(50% - 12px);
+            }
+        }
+
+        @media (max-width: 992px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: repeat(6, 1fr);
+            }
+
+            .metrics-bar {
+                flex-direction: column;
+            }
+
+            .metric-card {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                grid-template-rows: repeat(12, 1fr);
+                gap: 16px;
+            }
+
+            .tile {
+                padding: 24px 20px;
+            }
+
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+                padding: 20px;
+            }
+
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .status-bar {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+
+            .admin-actions {
+                justify-content: center;
+            }
+        }
+
+        /* Animation for tiles */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .tile {
+            animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            opacity: 0;
+        }
+
+        .tile:nth-child(1) { animation-delay: 0.05s; }
+        .tile:nth-child(2) { animation-delay: 0.1s; }
+        .tile:nth-child(3) { animation-delay: 0.15s; }
+        .tile:nth-child(4) { animation-delay: 0.2s; }
+        .tile:nth-child(5) { animation-delay: 0.25s; }
+        .tile:nth-child(6) { animation-delay: 0.3s; }
+        .tile:nth-child(7) { animation-delay: 0.35s; }
+        .tile:nth-child(8) { animation-delay: 0.4s; }
+        .tile:nth-child(9) { animation-delay: 0.45s; }
+        .tile:nth-child(10) { animation-delay: 0.5s; }
+        .tile:nth-child(11) { animation-delay: 0.55s; }
+        .tile:nth-child(12) { animation-delay: 0.6s; }
+
+        /* Data increase animations */
+        .increasing {
+            animation: increasePulse 0.5s ease;
+        }
+
+        @keyframes increasePulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+                color: var(--primary-red);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="dashboard-container">
+
+        <!-- Header with admin info -->
+        <div class="dashboard-header">
+            <div class="header-left">
+                <h1>MSAIS Security Control Center</h1>
+                <p>Administrative Dashboard | Real-time Security Monitoring</p>
+            </div>
+
+            <div class="header-right">
+                <div class="admin-profile">
+                    <div class="admin-avatar">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <div class="admin-details">
+                        <div class="admin-name">Administrator</div>
+                        <div class="admin-role">System Admin</div>
+                    </div>
+                </div>
+
+                <button class="back-btn" onclick="goBack()">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back to Portal</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Security Metrics Bar -->
+        <div class="metrics-bar">
+            <div class="metric-card">
+                <div class="metric-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="metric-content">
+                    <div class="metric-value">
+                        <span id="active-incidents">0</span>
+                        <span class="metric-trend trend-up" id="incidents-trend">
+                            <i class="fas fa-arrow-up"></i> 0%
+                        </span>
+                    </div>
+                    <div class="metric-label">Active Incidents</div>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-icon">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <div class="metric-content">
+                    <div class="metric-value">
+                        <span id="active-users">0</span>
+                        <span class="metric-trend trend-up" id="users-trend">
+                            <i class="fas fa-arrow-up"></i> 0%
+                        </span>
+                    </div>
+                    <div class="metric-label">Active Users</div>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-icon">
+                    <i class="fas fa-tasks"></i>
+                </div>
+                <div class="metric-content">
+                    <div class="metric-value">
+                        <span id="pending-tasks">0</span>
+                        <span class="metric-trend trend-neutral" id="tasks-trend">
+                            <i class="fas fa-minus"></i> 0%
+                        </span>
+                    </div>
+                    <div class="metric-label">Pending Tasks</div>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="metric-content">
+                    <div class="metric-value">
+                        <span id="system-health">100%</span>
+                        <span class="metric-trend trend-up" id="health-trend">
+                            <i class="fas fa-arrow-up"></i> 0%
+                        </span>
+                    </div>
+                    <div class="metric-label">System Health</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Admin Actions -->
+        <div class="admin-actions">
+            <button class="action-btn primary" onclick="exportReports()">
+                <i class="fas fa-file-export"></i>
+                <span>Export Reports</span>
+            </button>
+            <button class="action-btn" onclick="auditLog()">
+                <i class="fas fa-clipboard-list"></i>
+                <span>View Audit Log</span>
+            </button>
+            <button class="action-btn" onclick="systemSettings()">
+                <i class="fas fa-cog"></i>
+                <span>System Settings</span>
+            </button>
+            <button class="action-btn danger" onclick="emergencyLockdown()">
+                <i class="fas fa-lock"></i>
+                <span>Emergency Lockdown</span>
+            </button>
+            <button class="action-btn" onclick="refreshDashboard()">
+                <i class="fas fa-sync-alt"></i>
+                <span>Refresh Data</span>
+            </button>
+        </div>
+
+        <!-- Main Dashboard Grid -->
+        <div class="dashboard-grid">
+
+            <div class="tile" onclick="go('analytics.html')" tabindex="0" data-color="c8">
+                <div class="badge" id="analytics-badge">0</div>
+                <div class="icon c8"><i class="fas fa-chart-line"></i></div>
+                <div class="label">System Analytics</div>
+                <div class="sub-label">Real-time system performance & analytics dashboard</div>
+            </div>
+
+            <div class="tile" onclick="go('incident_management.html')" tabindex="0" data-color="c1">
+                <div class="badge" id="incidents-badge">0</div>
+                <div class="icon c1"><i class="fas fa-exclamation-circle"></i></div>
+                <div class="label">Incident Management</div>
+                <div class="sub-label">Monitor and manage incident reports & investigations</div>
+            </div>
+
+            <div class="tile" onclick="go('alert_management.html')" tabindex="0" data-color="c3">
+                <div class="badge" id="alerts-badge">0</div>
+                <div class="icon c3"><i class="fas fa-bell"></i></div>
+                <div class="label">Alert Management</div>
+                <div class="sub-label">Configure and monitor alert systems & notifications</div>
+            </div>
+
+            <div class="tile" onclick="go('missing_persons.html')" tabindex="0" data-color="c2">
+                <div class="badge" id="missing-badge">0</div>
+                <div class="icon c2"><i class="fas fa-user-search"></i></div>
+                <div class="label">Missing Persons</div>
+                <div class="sub-label">Track and manage missing persons cases & updates</div>
+            </div>
+
+            <div class="tile" onclick="go('evidence_manager.html')" tabindex="0" data-color="c9">
+                <div class="icon c9"><i class="fas fa-folder"></i></div>
+                <div class="label">Evidence Control</div>
+                <div class="sub-label">Manage digital and physical evidence repositories</div>
+            </div>
+
+            <div class="tile" onclick="go('database_management.html')" tabindex="0" data-color="c11">
+                <div class="badge" id="database-badge">0</div>
+                <div class="icon c11"><i class="fas fa-database"></i></div>
+                <div class="label">Database Management</div>
+                <div class="sub-label">Manage database systems, backups, and optimization</div>
+            </div>
+
+            <div class="tile" onclick="go('volunteer_admin.html')" tabindex="0" data-color="c4">
+                <div class="badge" id="volunteers-badge">0</div>
+                <div class="icon c4"><i class="fas fa-hands-helping"></i></div>
+                <div class="label">Volunteer Management</div>
+                <div class="sub-label">Manage volunteer network and assignments</div>
+            </div>
+
+            <div class="tile" onclick="go('tip_management.html')" tabindex="0" data-color="c5">
+                <div class="badge" id="tips-badge">0</div>
+                <div class="icon c5"><i class="fas fa-user-secret"></i></div>
+                <div class="label">Tip Management</div>
+                <div class="sub-label">Analyze anonymous tips and actionable leads</div>
+            </div>
+
+            <div class="tile" onclick="go('family_tracking_admin.html')" tabindex="0" data-color="c6">
+                <div class="icon c6"><i class="fas fa-users"></i></div>
+                <div class="label">Family Monitoring</div>
+                <div class="sub-label">Monitor family tracking requests & reunification</div>
+            </div>
+
+            <div class="tile" onclick="go('voice_logs.html')" tabindex="0" data-color="c7">
+                <div class="icon c7"><i class="fas fa-microphone"></i></div>
+                <div class="label">Voice Logs</div>
+                <div class="sub-label">Review voice assistant interactions & transcripts</div>
+            </div>
+
+            <div class="tile" onclick="go('broadcast_admin.html')" tabindex="0" data-color="c10">
+                <div class="icon c10"><i class="fas fa-broadcast-tower"></i></div>
+                <div class="label">Broadcast Control</div>
+                <div class="sub-label">Send emergency broadcasts & public alerts</div>
+            </div>
+
+            <div class="tile" onclick="go('route_management.html')" tabindex="0" data-color="c12">
+                <div class="icon c12"><i class="fas fa-route"></i></div>
+                <div class="label">Route Management</div>
+                <div class="sub-label">Manage and update safe route maps & zones</div>
+            </div>
+
+        </div>
+
+        <!-- System Status Bar -->
+        <div class="status-bar">
+            <div class="status-item">
+                <div class="status-indicator active"></div>
+                <div class="status-text">System Status:</div>
+                <div class="status-value" id="system-status">Operational</div>
+            </div>
+            <div class="status-item">
+                <div class="status-text">Last Updated:</div>
+                <div class="status-value" id="last-updated">Just now</div>
+            </div>
+            <div class="status-item">
+                <div class="status-text">Total Sessions:</div>
+                <div class="status-value" id="total-sessions">0</div>
+            </div>
+            <div class="status-item">
+                <div class="status-text">Uptime:</div>
+                <div class="status-value" id="uptime">100%</div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Initialize data storage
+        let dashboardData = {
+            activeIncidents: 0,
+            activeUsers: 0,
+            pendingTasks: 0,
+            systemHealth: 100,
+            totalSessions: 0,
+
+            badges: {
+                analytics: 0,
+                incidents: 0,
+                alerts: 0,
+                missing: 0,
+                volunteers: 0,
+                tips: 0,
+                database: 0
+            },
+
+            trends: {
+                incidents: 0,
+                users: 0,
+                tasks: 0,
+                health: 0
+            },
+
+            lastUpdate: new Date()
+        };
+
+        // DOM Elements
+        const elements = {
+            activeIncidents: document.getElementById('active-incidents'),
+            activeUsers: document.getElementById('active-users'),
+            pendingTasks: document.getElementById('pending-tasks'),
+            systemHealth: document.getElementById('system-health'),
+
+            incidentsTrend: document.getElementById('incidents-trend'),
+            usersTrend: document.getElementById('users-trend'),
+            tasksTrend: document.getElementById('tasks-trend'),
+            healthTrend: document.getElementById('health-trend'),
+
+            analyticsBadge: document.getElementById('analytics-badge'),
+            incidentsBadge: document.getElementById('incidents-badge'),
+            alertsBadge: document.getElementById('alerts-badge'),
+            missingBadge: document.getElementById('missing-badge'),
+            volunteersBadge: document.getElementById('volunteers-badge'),
+            tipsBadge: document.getElementById('tips-badge'),
+            databaseBadge: document.getElementById('database-badge'),
+
+            systemStatus: document.getElementById('system-status'),
+            lastUpdated: document.getElementById('last-updated'),
+            totalSessions: document.getElementById('total-sessions'),
+            uptime: document.getElementById('uptime')
+        };
+
+        // Navigation Functions
+        function go(page) {
+            const tile = event.currentTarget;
+            tile.style.pointerEvents = 'none';
+
+            const originalTransform = tile.style.transform;
+            tile.style.transform = originalTransform + ' scale(0.95)';
+
+            setTimeout(() => {
+                // In a real app, navigate to page
+                showNotification(`Loading ${page.replace('.html', '')}...`, 'info');
+                tile.style.pointerEvents = '';
+                tile.style.transform = originalTransform;
+            }, 300);
+        }
+
+        function goBack() {
+            const btn = document.querySelector('.back-btn');
+            btn.style.transform = 'translateY(2px)';
+
+            setTimeout(() => {
+                if (confirm('Return to main portal?')) {
+                    window.history.back();
+                }
+                btn.style.transform = '';
+            }, 200);
+        }
+
+        // Admin Action Functions
+        function exportReports() {
+            showNotification('Generating system reports...', 'info');
+            setTimeout(() => {
+                showNotification('Reports exported successfully!', 'success');
+            }, 2000);
+        }
+
+        function auditLog() {
+            showNotification('Loading audit log...', 'info');
+        }
+
+        function systemSettings() {
+            showNotification('Opening system settings...', 'info');
+        }
+
+        function emergencyLockdown() {
+            if (confirm('⚠️ Are you sure you want to initiate emergency lockdown? This will restrict all non-admin access.')) {
+                showNotification('Emergency lockdown initiated!', 'danger');
+                
+                // Visual feedback
+                document.body.style.animation = 'emergencyPulse 0.5s 3';
+                setTimeout(() => {
+                    document.body.style.animation = '';
+                    showNotification('All systems locked. Admin access only.', 'warning');
+                }, 1500);
+            }
+        }
+
+        function refreshDashboard() {
+            const btn = event.currentTarget;
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Refreshing...</span>';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                updateMetrics();
+                btn.innerHTML = originalHTML;
+                btn.disabled = false;
+                showNotification('Dashboard data refreshed!', 'success');
+            }, 1500);
+        }
+
+        // Data Management Functions
+        function updateMetrics() {
+            const previousData = { ...dashboardData };
+
+            // Simulate data updates
+            dashboardData.activeIncidents = Math.min(previousData.activeIncidents + Math.floor(Math.random() * 3), 100);
+            dashboardData.activeUsers = Math.min(previousData.activeUsers + Math.floor(Math.random() * 10), 1000);
+            dashboardData.pendingTasks = Math.min(previousData.pendingTasks + Math.floor(Math.random() * 5), 200);
+            dashboardData.totalSessions += Math.floor(Math.random() * 20);
+            dashboardData.systemHealth = 100 - Math.floor(Math.random() * 5);
+
+            // Update badges
+            dashboardData.badges.analytics = Math.min(previousData.badges.analytics + Math.floor(Math.random() * 3), 99);
+            dashboardData.badges.incidents = Math.min(previousData.badges.incidents + Math.floor(Math.random() * 5), 99);
+            dashboardData.badges.alerts = Math.min(previousData.badges.alerts + Math.floor(Math.random() * 4), 99);
+            dashboardData.badges.missing = Math.min(previousData.badges.missing + Math.floor(Math.random() * 2), 99);
+            dashboardData.badges.volunteers = Math.min(previousData.badges.volunteers + Math.floor(Math.random() * 3), 99);
+            dashboardData.badges.tips = Math.min(previousData.badges.tips + Math.floor(Math.random() * 4), 99);
+            dashboardData.badges.database = Math.min(previousData.badges.database + Math.floor(Math.random() * 3), 99);
+
+            // Calculate trends
+            dashboardData.trends.incidents = calculateTrend(previousData.activeIncidents, dashboardData.activeIncidents);
+            dashboardData.trends.users = calculateTrend(previousData.activeUsers, dashboardData.activeUsers);
+            dashboardData.trends.tasks = calculateTrend(previousData.pendingTasks, dashboardData.pendingTasks);
+            dashboardData.trends.health = dashboardData.systemHealth > previousData.systemHealth ? 1 : 
+                                         dashboardData.systemHealth < previousData.systemHealth ? -1 : 0;
+
+            dashboardData.lastUpdate = new Date();
+
+            updateUI();
+        }
+
+        function calculateTrend(oldValue, newValue) {
+            if (oldValue === 0) return 0;
+            return Math.round(((newValue - oldValue) / oldValue) * 100);
+        }
+
+        function updateUI() {
+            // Update metric values
+            elements.activeIncidents.textContent = dashboardData.activeIncidents;
+            elements.activeUsers.textContent = dashboardData.activeUsers;
+            elements.pendingTasks.textContent = dashboardData.pendingTasks;
+            elements.systemHealth.textContent = `${dashboardData.systemHealth}%`;
+            elements.totalSessions.textContent = dashboardData.totalSessions;
+
+            // Update trends
+            updateTrendElement(elements.incidentsTrend, dashboardData.trends.incidents);
+            updateTrendElement(elements.usersTrend, dashboardData.trends.users);
+            updateTrendElement(elements.tasksTrend, dashboardData.trends.tasks);
+            updateTrendElement(elements.healthTrend, dashboardData.trends.health);
+
+            // Update badges
+            elements.analyticsBadge.textContent = dashboardData.badges.analytics;
+            elements.incidentsBadge.textContent = dashboardData.badges.incidents;
+            elements.alertsBadge.textContent = dashboardData.badges.alerts;
+            elements.missingBadge.textContent = dashboardData.badges.missing;
+            elements.volunteersBadge.textContent = dashboardData.badges.volunteers;
+            elements.tipsBadge.textContent = dashboardData.badges.tips;
+            elements.databaseBadge.textContent = dashboardData.badges.database;
+
+            // Update status
+            elements.lastUpdated.textContent = formatTime(dashboardData.lastUpdate);
+            elements.uptime.textContent = `${dashboardData.systemHealth}%`;
+
+            // Animate increasing values
+            animateIncrease(elements.activeIncidents);
+            animateIncrease(elements.activeUsers);
+            animateIncrease(elements.pendingTasks);
+        }
+
+        function updateTrendElement(element, trend) {
+            const trendClass = trend > 0 ? 'trend-up' : trend < 0 ? 'trend-down' : 'trend-neutral';
+            const arrow = trend > 0 ? 'fa-arrow-up' : trend < 0 ? 'fa-arrow-down' : 'fa-minus';
+
+            element.className = `metric-trend ${trendClass}`;
+            element.innerHTML = `<i class="fas ${arrow}"></i> ${Math.abs(trend)}%`;
+        }
+
+        function animateIncrease(element) {
+            element.classList.add('increasing');
+            setTimeout(() => {
+                element.classList.remove('increasing');
+            }, 500);
+        }
+
+        function formatTime(date) {
+            const now = new Date();
+            const diff = now - date;
+
+            if (diff < 60000) return 'Just now';
+            if (diff < 3600000) return `${Math.floor(diff / 60000)} min ago`;
+            if (diff < 86400000) return `${Math.floor(diff / 3600000)} hours ago`;
+            return date.toLocaleDateString();
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            const colors = {
+                info: '#e63946',
+                success: '#06d6a0',
+                warning: '#ffd166',
+                danger: '#e63946'
+            };
+
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${colors[type]}20;
+                color: white;
+                padding: 16px 24px;
+                border-radius: 16px;
+                border-left: 4px solid ${colors[type]};
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+                z-index: 1000;
+                animation: slideIn 0.3s ease;
+                backdrop-filter: blur(20px);
+                border: 1px solid ${colors[type]}40;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                max-width: 400px;
+            `;
+
+            const icon = type === 'success' ? '✓' :
+                type === 'warning' ? '⚠' :
+                    type === 'danger' ? '✗' : 'ℹ';
+
+            notification.innerHTML = `
+                <span style="font-size: 20px;">${icon}</span>
+                <span>${message}</span>
+            `;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Add CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+            @keyframes emergencyPulse {
+                0% { background-color: var(--dark-bg); }
+                50% { background-color: rgba(230, 57, 70, 0.15); }
+                100% { background-color: var(--dark-bg); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize Dashboard
+        document.addEventListener('DOMContentLoaded', function () {
+            // Set up event listeners for tiles
+            document.querySelectorAll('.tile').forEach(tile => {
+                tile.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.click();
+                    }
+                });
+
+                // Add tooltips
+                tile.title = "Click to open " + tile.querySelector('.label').textContent;
+            });
+
+            // Initialize with some data
+            updateMetrics();
+
+            // Simulate real-time updates
+            setInterval(() => {
+                updateMetrics();
+            }, 30000);
+
+            // Show welcome message
+            setTimeout(() => {
+                showNotification('Security dashboard loaded. All systems operational.', 'success');
+            }, 1000);
+
+            // Console branding
+            console.log("%c🔐 MSAIS Admin Dashboard", "color: #e63946; font-size: 18px; font-weight: bold;");
+            console.log("%cSecurity Control Center Active", "color: #06d6a0; font-size: 14px;");
+        });
+    </script>
+
+</body>
+
+</html>

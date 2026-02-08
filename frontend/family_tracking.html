@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Family Tracking | MSAIS</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial;
+    background:#0b1220;
+    color:white;
+}
+
+.navbar{
+    padding:15px;
+    background:#0f172a;
+    text-align:center;
+    font-size:20px;
+    font-weight:bold;
+}
+
+.container{
+    max-width:1100px;
+    margin:30px auto;
+    background:#111827;
+    padding:20px;
+    border-radius:12px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap:20px;
+}
+
+.panel{
+    background:#020617;
+    padding:15px;
+    border-radius:10px;
+}
+
+.map-box{
+    height:360px;
+    background:#020617;
+    border-radius:10px;
+    margin-top:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#93c5fd;
+    border:1px dashed #3b82f6;
+}
+
+label{
+    display:block;
+    margin-top:10px;
+}
+
+input{
+    width:100%;
+    padding:8px;
+    border-radius:6px;
+    border:none;
+    margin-top:5px;
+}
+
+.btn{
+    margin-top:10px;
+    padding:10px;
+    width:100%;
+    background:#2563eb;
+    color:white;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.btn:hover{
+    background:#1d4ed8;
+}
+
+.secondary{
+    background:#10b981;
+}
+
+.secondary:hover{
+    background:#0f766e;
+}
+
+.warning{
+    background:#dc2626;
+}
+
+.warning:hover{
+    background:#b91c1c;
+}
+
+.back{
+    margin-top:15px;
+    background:#7c3aed;
+}
+
+.list{
+    margin-top:10px;
+}
+
+.card{
+    background:#111827;
+    padding:10px;
+    border-radius:8px;
+    margin-bottom:8px;
+}
+
+.status{
+    margin-top:10px;
+    padding:8px;
+    background:#0b1220;
+    border-radius:6px;
+    text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<div class="navbar">Family Tracking</div>
+
+<div class="container">
+
+<h2>Track Your Loved Ones</h2>
+
+<div class="grid">
+
+<!-- LEFT PANEL: MAP + LIVE STATUS -->
+<div class="panel">
+<h3>Live Location Map</h3>
+
+<div class="map-box" id="map">
+🗺️ Live family locations will appear here
+</div>
+
+<button class="btn secondary" onclick="shareMyLocation()">
+Share My Live Location
+</button>
+
+<button class="btn warning" onclick="panicShare()">
+Send Panic Location
+</button>
+
+<div id="mapStatus" class="status">
+Tracking is currently OFF.
+</div>
+</div>
+
+<!-- RIGHT PANEL: TRUSTED CONTACTS -->
+<div class="panel">
+<h3>Trusted Contacts</h3>
+
+<label>Contact Name *</label>
+<input type="text" id="fname" placeholder="e.g., Mother, Brother">
+
+<label>Phone Number *</label>
+<input type="tel" id="fphone" placeholder="10-digit number">
+
+<button class="btn" onclick="addContact()">
+Add Trusted Contact
+</button>
+
+<h4>Your Trusted Circle</h4>
+<div id="contactList" class="list">
+<div class="card">No contacts added yet.</div>
+</div>
+
+<div id="contactStatus" class="status">
+Add at least one trusted contact.
+</div>
+</div>
+
+</div>
+
+<button class="btn back" onclick="backHome()">Back to Dashboard</button>
+
+</div>
+
+<script>
+let trackingOn = false;
+
+function shareMyLocation(){
+    trackingOn = true;
+    document.getElementById("map").innerText =
+      "📍 Sharing live location with your trusted contacts...";
+    document.getElementById("mapStatus").innerText =
+      "🟢 Live tracking is ON.";
+}
+
+function panicShare(){
+    trackingOn = true;
+    document.getElementById("map").innerText =
+      "🚨 PANIC MODE: broadcasting your exact location NOW!";
+    document.getElementById("mapStatus").innerText =
+      "🔴 Emergency location sent to all contacts!";
+}
+
+function addContact(){
+    const name = document.getElementById("fname").value.trim();
+    const phone = document.getElementById("fphone").value.trim();
+
+    if(!name || !phone){
+        document.getElementById("contactStatus").innerText =
+          "⚠️ Please enter both name and phone.";
+        return;
+    }
+
+    const list = document.getElementById("contactList");
+
+    if(list.children.length === 1 &&
+       list.children[0].innerText.includes("No contacts")){
+        list.innerHTML = "";
+    }
+
+    const card = document.createElement("div");
+    card.className = "card";
+
+    card.innerHTML = `
+    👤 ${name}<br>
+    📞 ${phone}
+    `;
+
+    list.appendChild(card);
+
+    document.getElementById("contactStatus").innerText =
+      "✅ Trusted contact added.";
+
+    document.getElementById("fname").value = "";
+    document.getElementById("fphone").value = "";
+}
+
+function backHome(){
+    window.location.href = "dashboard.html";
+}
+</script>
+
+</body>
+</html>
